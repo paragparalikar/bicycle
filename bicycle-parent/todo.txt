@@ -1,0 +1,2 @@
+1. All distances those are calculated in indicators and rules should be ratios instead of differences. So that they are comparable. 
+Otherwise one big parameter can fully cominate the distance measurement while small parameter does not event participate in calculations. 

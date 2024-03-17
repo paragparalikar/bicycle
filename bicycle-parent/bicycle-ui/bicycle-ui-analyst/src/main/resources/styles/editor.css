@@ -1,0 +1,42 @@
+.indicator {
+    -fx-fill: #F57966 !important;
+    -fx-font-weight: bold;
+}
+.action {
+    -fx-fill: #007906 !important;
+    -fx-font-weight: bold;
+}
+.rule {
+    -fx-fill: #9900C6 !important;
+    -fx-font-weight: bold;
+}
+.data-types {
+    -fx-fill: #4ECBFD !important;
+    -fx-font-weight: bold;
+}
+.literals {
+    -fx-fill: #9C93F9 !important;
+    -fx-font-weight: bold;
+}
+.semicolon {
+    -fx-font-weight: bold !important;
+    -fx-fill: #00f  !important;
+}
+.paren {
+    -fx-fill: #00f !important;
+    -fx-font-weight: bold !important;
+}
+.bracket {
+    -fx-fill: #00f !important;
+    -fx-font-weight: bold !important;
+}
+.brace {
+    -fx-fill: #00f !important;
+    -fx-font-weight: bold !important;
+}
+.string {
+    -fx-fill: #F1FA8C !important;
+}
+.comment {
+	-fx-fill: #62677D !important;
+}

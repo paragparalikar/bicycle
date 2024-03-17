@@ -1,0 +1,8 @@
+.formsfx-group {
+    -fx-border-width: 0px;
+    -fx-border-insets: 0px;
+}
+
+.simple-textarea {
+	-fx-text-fill: -color-input-fg;
+}

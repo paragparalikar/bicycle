@@ -1,0 +1,7 @@
+.table-view.dense > .column-header-background .column-header {
+  -fx-size: 30px;
+}
+.table-view > .column-header-background .column-header .label {
+	-fx-font-size: 12pt;
+  	-fx-padding: 0 0.25em 0 0.25em;
+}
