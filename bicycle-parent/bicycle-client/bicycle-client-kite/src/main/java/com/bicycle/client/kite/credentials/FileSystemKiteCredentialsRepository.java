@@ -10,7 +10,9 @@ import lombok.SneakyThrows;
 import lombok.Synchronized;
 
 public class FileSystemKiteCredentialsRepository implements KiteCredentialsRepository {
-    private static final String PATH = Constant.HOME + File.separator + "credentials-kite.csv";
+    private static final String PATH = Constant.HOME + 
+    		File.separator + "kite" + 
+    		File.separator + "credentials-kite.csv";
     
     private final Map<String, KiteCredentials> cache = new HashMap<>();
     

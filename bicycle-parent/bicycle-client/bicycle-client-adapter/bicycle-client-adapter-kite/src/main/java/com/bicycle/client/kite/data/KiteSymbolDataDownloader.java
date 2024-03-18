@@ -1,7 +1,9 @@
 package com.bicycle.client.kite.data;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,6 +33,20 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @RequiredArgsConstructor
 public class KiteSymbolDataDownloader implements Runnable {
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+	
+	public static void main1(String[] args) throws Exception {
+		final SymbolDataProvider symbolDataProvider = new KiteSymbolDataProvider().equitiesOnly();
+		final SymbolRepository symbolRepository = new CacheSymbolRepository(symbolDataProvider);
+		try(final BarRepository barRepository = new FileSystemBarRepository(symbolRepository)){
+			final Symbol symbol = symbolRepository.findByCode("BEML", Exchange.NSE);
+			final ZonedDateTime lastDownloadDate = Dates.toZonedDateTime(barRepository.getLastDownloadDate(symbol, Timeframe.D));
+			System.out.println(FORMATTER.format(lastDownloadDate));
+			barRepository.findBySymbolAndTimeframe(symbol, Timeframe.D).forEach(bar -> {
+				System.out.printf("%s %s %f\n", bar.symbol().code(), new Date(bar.date()).toString(), bar.close());
+			});
+		}
+	}
 	
 	public static void main(String[] args) throws InterruptedException {
 		final KiteBrokerClientFactory brokerClientFactory = new KiteBrokerClientFactory();
@@ -39,9 +55,9 @@ public class KiteSymbolDataDownloader implements Runnable {
 		final SymbolDataProvider symbolDataProvider = new KiteSymbolDataProvider().equitiesOnly();
 		final SymbolRepository symbolRepository = new CacheSymbolRepository(symbolDataProvider);
 		final BarRepository barRepository = new FileSystemBarRepository(symbolRepository);
-		final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 		
 		for(Timeframe timeframe : Arrays.asList(Timeframe.values()).reversed()) {
+			final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 			for(Symbol symbol : symbolRepository.findByExchange(Exchange.NSE)) {
 				executorService.execute(KiteSymbolDataDownloader.builder()
 						.symbol(symbol)
@@ -50,10 +66,9 @@ public class KiteSymbolDataDownloader implements Runnable {
 						.barDataProvider(barDataProvider)
 						.build());
 			}
+			executorService.shutdown();
+			executorService.awaitTermination(10, TimeUnit.HOURS);
 		}
-		
-		executorService.shutdown();
-		executorService.awaitTermination(10, TimeUnit.HOURS);
 	}
 	
 	private final Symbol symbol;
@@ -74,7 +89,7 @@ public class KiteSymbolDataDownloader implements Runnable {
 				.build();
 		final List<Bar> bars = barDataProvider.get(barQuery);
 		barRepository.persist(symbol, timeframe, bars);
-		System.out.printf("%-5s %-30s %d\n", timeframe, symbol.code(), bars.size());
+		System.out.printf("%s %-5s %-15s %d\n", FORMATTER.format(fromDate), timeframe, symbol.code(), bars.size());
 	}
 
 }

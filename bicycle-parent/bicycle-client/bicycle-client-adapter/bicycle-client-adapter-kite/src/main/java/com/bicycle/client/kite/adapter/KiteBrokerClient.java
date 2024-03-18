@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
@@ -109,6 +110,7 @@ public class KiteBrokerClient implements BrokerClient {
                 barQuery.from(), 
                 barQuery.to()).stream()
             .map(kiteCandle -> kiteMapper.toBar(symbol, timeframe, kiteCandle))
+            .sorted(Comparator.comparing(Bar::date))
             .toList();
     }
     

@@ -23,7 +23,7 @@ public class KiteFileSystemSymbolDataLoader implements KiteSymbolDataLoader {
     }
     
     private Path getPath(KiteExchange kiteExchange) {
-        return Paths.get(Constant.HOME, "symbols", "kite", kiteExchange.name().toLowerCase() + ".csv");
+        return Paths.get(Constant.HOME, "kite", "symbols", kiteExchange.name().toLowerCase() + ".csv");
     }
     
     @Override

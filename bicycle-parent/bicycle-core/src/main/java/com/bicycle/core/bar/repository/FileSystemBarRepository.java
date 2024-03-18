@@ -92,10 +92,11 @@ public class FileSystemBarRepository implements BarRepository {
     @Override
     @SneakyThrows
     public void persist(Symbol symbol, Timeframe timeframe, List<Bar> bars) {
+    	if(null == bars || bars.isEmpty()) return;
         final Path path = getPath(symbol, timeframe);
         if(!Files.exists(path)) Files.createDirectories(path.getParent());
         try(RandomAccessFile file = new RandomAccessFile(path.toFile(), "rw")){
-            if(file.readLong() == bars.get(0).date()) {
+            if(BYTES > file.length() || file.readLong() >= bars.get(0).date()) {
                 file.setLength(0);
                 file.seek(0);
             } else {
